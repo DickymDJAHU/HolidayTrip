@@ -227,13 +227,14 @@ const FIREBASE_CONFIG = {
 const DAYS = [
 { id:'d1', label:'Day 1', date:'Fri 17 Jul 2026', iso:'2026-07-17', title:'Arrival & George Town Core', strategy:'Land, check into Le Embassy Hotel (your 4-night base), then ease into George Town on foot.',
   items:[
-    {id:'a1', time:'11:50', title:'Land at PEN Airport → Grab to Hotel', place:'Penang International Airport', mode:'car', costs:[{amount:30.00,cur:'RM',type:'grab'}]},
+    {id:'a1', time:'11:50', title:'Land at PEN Airport → Grab to Hotel', place:'Le Embassy Hotel George Town', mode:'grab', costs:[{amount:30.00,cur:'RM',type:'card'}]},
     {id:'a2', time:'12:35', title:'Drop bags at Le Embassy Hotel', place:'Le Embassy Hotel George Town', mode:'walk', costs:[]},
-    {id:'a3_pray', time:'13:00', title:'Friday Prayer (Solat Jumaat)', place:'Pakistan Mosque Penang (or Kapitan Keling Mosque)', mode:'walk', costs:[], note:'Pakistan Mosque is only a 5-minute walk from the hotel.'},
+    {id:'a3_pray', time:'13:00', title:'Friday Prayer (Solat Jumaat)', place:'Pakistan Mosque Penang', mode:'walk', costs:[], note:'Pakistan Mosque is only a 5-minute walk from the hotel.'},
     {id:'a3', time:'14:15', title:'Late Lunch: Siam Road Charcoal Char Kuey Teow', place:'Siam Road Charcoal Char Kuey Teow', mode:'walk', costs:[{amount:22.00,cur:'RM',type:'cash'}]},
     {id:'a4', time:'15:45', title:'Armenian Street Art Alleys & Chew Jetty', place:'Armenian Street Penang', mode:'walk', costs:[], note:'Free — also nearby: Chew Jetty'},
     {id:'a5', time:'17:30', title:'Coffee: Norm Micro Roastery', place:'Norm Micro Roastery Penang', mode:'walk', costs:[{amount:45.00,cur:'RM',type:'cash'}]},
-    {id:'a6', time:'19:00', title:'Dinner: Chulia Street Hawker Food', place:'Chulia Street Hawker Food Penang', mode:'walk', costs:[{amount:40.00,cur:'RM',type:'cash'}]},,
+    {id:'a6', time:'19:00', title:'Dinner: Chulia Street Hawker Food', place:'Chulia Street Hawker Food Penang', mode:'walk', costs:[{amount:40.00,cur:'RM',type:'cash'}]},
+    {id:'a7', time:'22:30', title:'Rest at hotel', place:'Le Embassy Hotel George Town', mode:'walk', costs:[]}
   ]},
 { id:'d2', label:'Day 2', date:'Sat 18 Jul 2026', iso:'2026-07-18', title:'Early Hat Yai Border Run', strategy:'Hit the border at 07:16 to skip tourist bus crowds. Thai-side times shown alongside Malaysia time.',
   items:[
