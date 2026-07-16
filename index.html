@@ -207,21 +207,28 @@ h1{
 </div>
 
 <script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getFirestore, doc, onSnapshot, setDoc, enableIndexedDbPersistence } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+  // Import the functions you need from the SDKs you need
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-analytics.js";
+  // TODO: Add SDKs for Firebase products that you want to use
+  // https://firebase.google.com/docs/web/setup#available-libraries
 
-// Fill these in with your own free Firebase project's config (see setup notes)
-// to sync data across devices. Until you do, the app still works great —
-// it just saves to this device only (localStorage), same as before.
-const FIREBASE_CONFIG = {
- apiKey: "AIzaSyAAF4Zao0_R0JQLV3zqOFrGrINuOyFg8To",
-  authDomain: "ourtrip-31ccc.firebaseapp.com",
-  projectId: "ourtrip-31ccc",
-  storageBucket: "ourtrip-31ccc.firebasestorage.app",
-  messagingSenderId: "14664694618",
-  appId: "1:14664694618:web:d2ea93e570341630b71163",
-  measurementId: "G-K1D8DEKTNB"
-};
+  // Your web app's Firebase configuration
+  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+  const firebaseConfig = {
+    apiKey: "AIzaSyAAF4Zao0_R0JQLV3zqOFrGrINuOyFg8To",
+    authDomain: "ourtrip-31ccc.firebaseapp.com",
+    projectId: "ourtrip-31ccc",
+    storageBucket: "ourtrip-31ccc.firebasestorage.app",
+    messagingSenderId: "14664694618",
+    appId: "1:14664694618:web:d2ea93e570341630b71163",
+    measurementId: "G-K1D8DEKTNB"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);
+</script>;
 
 // ---------- DATA ----------
 const DAYS = [
