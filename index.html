@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
-<title>OurTrip — Penang/Hat Yai/Ipoh Trip</title>
+<title>Dicky & Wife — Penang/Hat Yai/Ipoh Trip</title>
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#2F6E64">
 <link rel="apple-touch-icon" href="icon-192.png">
@@ -191,7 +191,7 @@ h1{
 
   <div class="header">
     <div class="eyebrow">Boarding Pass · Penang → Hat Yai → Ipoh</div>
-    <h1>OurTrip <br>5-Day Trip</h1>
+    <h1>Dicky & Wife<br>5-Day Trip</h1>
     <div class="sub">Tap a stop to open directions. Grab legs open the Grab app. Times auto-shift if you're running late.</div>
 
     <div class="budget-strip" id="budgetStrip"></div>
@@ -207,35 +207,32 @@ h1{
 </div>
 
 <script type="module">
- import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
-  import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-analytics.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getFirestore, doc, onSnapshot, setDoc, enableIndexedDbPersistence } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
 // Fill these in with your own free Firebase project's config (see setup notes)
 // to sync data across devices. Until you do, the app still works great —
 // it just saves to this device only (localStorage), same as before.
 const FIREBASE_CONFIG = {
- apiKey: "AIzaSyAAF4Zao0_R0JQLV3zqOFrGrINuOyFg8To",
-  authDomain: "ourtrip-31ccc.firebaseapp.com",
-  projectId: "ourtrip-31ccc",
-  storageBucket: "ourtrip-31ccc.firebasestorage.app",
-  messagingSenderId: "14664694618",
-  appId: "1:14664694618:web:d2ea93e570341630b71163",
-  measurementId: "G-K1D8DEKTNB"
+  apiKey: "YOUR_API_KEY",
+  authDomain: "YOUR_PROJECT.firebaseapp.com",
+  projectId: "YOUR_PROJECT",
+  storageBucket: "YOUR_PROJECT.appspot.com",
+  messagingSenderId: "YOUR_SENDER_ID",
+  appId: "YOUR_APP_ID"
 };
-
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
 
 // ---------- DATA ----------
 const DAYS = [
 { id:'d1', label:'Day 1', date:'Fri 17 Jul 2026', iso:'2026-07-17', title:'Arrival & George Town Core', strategy:'Land, check into Le Embassy Hotel (your 4-night base), then ease into George Town on foot.',
   items:[
-{id:'a1', time:'11:50', title:'Land at PEN Airport → Grab to Hotel', place:'Penang International Airport', mode:'car', costs:[{amount:30.00,cur:'RM',type:'grab'}]},
+    {id:'a1', time:'11:50', title:'Land at PEN Airport → Grab to Hotel', place:'Penang International Airport', mode:'car', costs:[{amount:30.00,cur:'RM',type:'grab'}]},
     {id:'a2', time:'12:35', title:'Drop bags at Le Embassy Hotel', place:'Le Embassy Hotel George Town', mode:'walk', costs:[]},
     {id:'a3_pray', time:'13:00', title:'Friday Prayer (Solat Jumaat)', place:'Pakistan Mosque Penang (or Kapitan Keling Mosque)', mode:'walk', costs:[], note:'Pakistan Mosque is only a 5-minute walk from the hotel.'},
     {id:'a3', time:'14:15', title:'Late Lunch: Siam Road Charcoal Char Kuey Teow', place:'Siam Road Charcoal Char Kuey Teow', mode:'walk', costs:[{amount:22.00,cur:'RM',type:'cash'}]},
     {id:'a4', time:'15:45', title:'Armenian Street Art Alleys & Chew Jetty', place:'Armenian Street Penang', mode:'walk', costs:[], note:'Free — also nearby: Chew Jetty'},
     {id:'a5', time:'17:30', title:'Coffee: Norm Micro Roastery', place:'Norm Micro Roastery Penang', mode:'walk', costs:[{amount:45.00,cur:'RM',type:'cash'}]},
-    {id:'a6', time:'19:00', title:'Dinner: Chulia Street Hawker Food', place:'Chulia Street Hawker Food Penang', mode:'walk', costs:[{amount:40.00,cur:'RM',type:'cash'}]},
+    {id:'a6', time:'19:00', title:'Dinner: Chulia Street Hawker Food', place:'Chulia Street Hawker Food Penang', mode:'walk', costs:[{amount:40.00,cur:'RM',type:'cash'}]},,
   ]},
 { id:'d2', label:'Day 2', date:'Sat 18 Jul 2026', iso:'2026-07-18', title:'Early Hat Yai Border Run', strategy:'Hit the border at 07:16 to skip tourist bus crowds. Thai-side times shown alongside Malaysia time.',
   items:[
@@ -445,21 +442,6 @@ function openGrab(place){
   }, 1200);
 }
 
-function openMaxim(place) {
-  // Intent link engineered specifically for Android to trigger the Maxim app
-  const scheme = 'intent://#Intent;scheme=taximaxim;package=com.taximaxim.client;S.search_text=' + encodeURIComponent(place) + ';end';
-  const fallback = 'https://taximaxim.com/';
-  const start = Date.now();
-  
-  window.location.href = scheme;
-  
-  setTimeout(() => {
-    if (!document.hidden && Date.now() - start < 2200) {
-      window.open(fallback, '_blank');
-    }
-  }, 1200);
-}
-
 // ---------- RENDER ----------
 function computeDaySchedule(day){
   const effectiveOffset = getOffset(day.id); // minutes
@@ -657,9 +639,6 @@ function renderDay(){
   container.querySelectorAll('[data-grab]').forEach(btn=>{
     btn.onclick = ()=> openGrab(decodeURIComponent(btn.dataset.grab));
   });
-    container.querySelectorAll('[data-maxim]').forEach(btn=>{
-    btn.onclick = ()=> openMaxim(decodeURIComponent(btn.dataset.maxim));
-  });
   container.querySelectorAll('[data-done]').forEach(btn=>{
     btn.onclick = ()=> toggleDone(day.id, day.items.find(i=>i.id===btn.dataset.done));
   });
@@ -686,7 +665,6 @@ if('serviceWorker' in navigator){
     navigator.serviceWorker.register('sw.js').catch(()=>{ /* offline install not available on this host */ });
   });
 }
-
 </script>
-</body> 
+</body>
 </html>
