@@ -1,4 +1,4 @@
-const CACHE = 'trip-itinerary-v16';
+const CACHE = 'trip-itinerary-v17';
 const FILES = [
   './index.html',
   './manifest.json',
