@@ -1,0 +1,9 @@
+{
+  "name": "penang-trip-itinerary",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Our Trip 5-day Penang / Hat Yai / Ipoh trip itinerary app",
+  "scripts": {
+    "start": "npx --yes live-server --port=8080 --host=127.0.0.1"
+  }
+}

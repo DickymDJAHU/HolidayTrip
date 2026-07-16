@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
+<title>OurTrip — Penang/Hat Yai/Ipoh Trip</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#2F6E64">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="icon" href="icon-192.png">
+<style>
+:root{
+  --ink:#1F2B24;
+  --paper:#EDEEDF;
+  --paper2:#E2E4CE;
+  --card:#F7F8EF;
+  --jade:#2F6E64;
+  --jade-dark:#1F4B45;
+  --marigold:#E2A63B;
+  --chili:#C4432B;
+  --line: rgba(31,43,36,0.16);
+  --muted:#5B6459;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  background:var(--paper);
+  color:var(--ink);
+  font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+  -webkit-font-smoothing:antialiased;
+  min-height:100vh;
+  padding-bottom:40px;
+}
+.wrap{max-width:640px;margin:0 auto;padding:18px 14px 0;}
+
+/* HEADER */
+.header{padding:6px 4px 16px;}
+.eyebrow{
+  font-family:ui-monospace,'SF Mono',Consolas,'Roboto Mono',monospace;
+  font-size:11px;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  color:var(--jade);
+  font-weight:600;
+}
+h1{
+  font-family:Georgia,'Times New Roman',serif;
+  font-weight:700;
+  font-size:30px;
+  line-height:1.05;
+  margin:4px 0 6px;
+  letter-spacing:-0.01em;
+}
+.sub{font-size:13px;color:var(--muted);}
+
+/* BUDGET STRIP */
+.budget-strip{
+  display:flex; gap:8px; margin-top:14px; flex-wrap:wrap;
+}
+.chip{
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:10px;
+  padding:8px 10px;
+  flex:1;
+  min-width:120px;
+}
+.chip .k{font-family:ui-monospace,'SF Mono',Consolas,'Roboto Mono',monospace;font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;}
+.chip .v{font-family:ui-monospace,'SF Mono',Consolas,'Roboto Mono',monospace;font-size:15px;font-weight:600;margin-top:2px;}
+.chip .v.over{color:var(--chili);}
+.chip .v.under{color:var(--jade-dark);}
+
+/* TABS */
+.tabs{
+  display:grid; grid-template-columns:repeat(5,1fr); gap:6px;
+  margin:18px 0 14px;
+}
+.tab{
+  font-family:ui-monospace,'SF Mono',Consolas,'Roboto Mono',monospace;
+  font-size:13px; font-weight:700;
+  padding:12px 4px; border-radius:12px;
+  border:1px solid var(--line);
+  background:var(--card); color:var(--ink);
+  cursor:pointer; line-height:1.5; text-align:center;
+}
+.tab.active{ background:var(--jade); color:#fff; border-color:var(--jade); }
+
+/* DAY META */
+.day-meta{ margin-bottom:12px; }
+.day-title{font-family:Georgia,'Times New Roman',serif; font-weight:600; font-size:20px;}
+.day-strategy{
+  font-size:12.5px; color:var(--muted); margin-top:4px; line-height:1.5;
+  background:var(--paper2); border-radius:8px; padding:8px 10px;
+}
+.offset-row{
+  display:flex; align-items:center; justify-content:space-between;
+  margin-top:8px; font-family:ui-monospace,'SF Mono',Consolas,'Roboto Mono',monospace; font-size:11px;
+}
+.offset-badge{
+  color:var(--chili); font-weight:600;
+}
+.reset-btn{
+  background:none; border:1px solid var(--line); border-radius:6px;
+  padding:3px 8px; font-family:ui-monospace,'SF Mono',Consolas,'Roboto Mono',monospace; font-size:10px;
+  color:var(--muted); cursor:pointer;
+}
+
+/* CARD - ticket stub */
+.card{
+  display:flex;
+  background:var(--card);
+  border-radius:12px;
+  margin-bottom:12px;
+  border:1px solid var(--line);
+  position:relative;
+  overflow:hidden;
+  transition:box-shadow .2s, border-color .2s;
+}
+.card.ontime{ border-color:var(--jade); background:linear-gradient(0deg, rgba(47,110,100,0.07), rgba(47,110,100,0.07)), var(--card); }
+.card.overdue{ border-color:var(--chili); background:linear-gradient(0deg, rgba(196,67,43,0.08), rgba(196,67,43,0.08)), var(--card); }
+.card.now{ box-shadow:0 0 0 2px rgba(47,110,100,0.3); }
+.card.done{ opacity:.5; background:var(--card) !important; }
+.stub-time.ontime{ background:rgba(47,110,100,0.16); }
+.stub-time.overdue{ background:rgba(196,67,43,0.16); }
+
+.stub-time{
+  font-family:ui-monospace,'SF Mono',Consolas,'Roboto Mono',monospace;
+  width:74px; flex:0 0 74px;
+  padding:12px 6px;
+  text-align:center;
+  border-right:1px dashed var(--line);
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  position:relative;
+  background:var(--paper2);
+}
+.stub-time::before, .stub-time::after{
+  content:''; position:absolute; width:12px; height:12px; border-radius:50%;
+  background:var(--paper); left:50%; transform:translateX(-50%);
+}
+.stub-time::before{ top:-6px; }
+.stub-time::after{ bottom:-6px; }
+.stub-time .t{font-size:15px; font-weight:600; color:var(--ink);}
+.stub-time .adj{font-size:15px; font-weight:700; color:var(--jade-dark); margin-top:1px;}
+.stub-time .adj-end{font-size:10.5px; font-weight:600; color:var(--jade-dark); opacity:.75; margin-top:1px;}
+.stub-time .mode{font-size:16px; margin-top:6px;}
+
+.stub-body{ flex:1; padding:12px 12px 12px 14px; min-width:0; }
+.stub-title{font-weight:600; font-size:14.5px; line-height:1.3;}
+.stub-place{font-size:12px; color:var(--muted); margin-top:2px;}
+.stub-note{font-size:11.5px; color:var(--muted); margin-top:4px; font-style:italic;}
+.status-tag{
+  display:inline-block; font-family:ui-monospace,'SF Mono',Consolas,'Roboto Mono',monospace; font-size:10px;
+  font-weight:600; padding:2px 6px; border-radius:5px; margin-top:6px;
+}
+.status-tag.now{background:var(--jade); color:#fff;}
+.status-tag.late{background:var(--chili); color:#fff;}
+.status-tag.next{background:var(--marigold); color:#3a2a08;}
+
+.actions{ display:flex; gap:6px; margin-top:9px; flex-wrap:wrap; }
+.btn{
+  font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif; font-size:12px; font-weight:600;
+  padding:6px 10px; border-radius:7px; border:1px solid var(--line);
+  background:transparent; color:var(--ink); cursor:pointer; text-decoration:none;
+  display:inline-flex; align-items:center; gap:4px;
+}
+.btn.maps{border-color:var(--jade); color:var(--jade-dark);}
+.btn.grab{border-color:var(--chili); color:var(--chili);}
+.btn.done-btn{margin-left:auto; background:var(--ink); color:#fff; border-color:var(--ink);}
+.btn.done-btn.on{background:var(--jade-dark); border-color:var(--jade-dark);}
+
+.costs{ margin-top:9px; display:flex; flex-direction:column; gap:6px; }
+.cost-row{ display:flex; align-items:center; gap:6px; font-size:12px; }
+.cost-label{ color:var(--muted); flex:0 0 auto; min-width:44px; }
+.cost-input-wrap{ display:flex; align-items:center; gap:4px; background:var(--paper); border:1px solid var(--line); border-radius:6px; padding:3px 6px; }
+.cost-input-wrap select{ border:none; background:none; font-family:ui-monospace,'SF Mono',Consolas,'Roboto Mono',monospace; font-size:11px; color:var(--muted); }
+.cost-input-wrap input{
+  width:64px; border:none; background:none; font-family:ui-monospace,'SF Mono',Consolas,'Roboto Mono',monospace;
+  font-size:12.5px; font-weight:600; color:var(--ink); text-align:right;
+}
+.cost-input-wrap input:focus{outline:none;}
+.cost-type{ font-size:10px; color:var(--muted); font-family:ui-monospace,'SF Mono',Consolas,'Roboto Mono',monospace; }
+
+.footnote{ font-size:11px; color:var(--muted); text-align:center; margin:26px 0 8px; line-height:1.6; }
+.footnote a{color:var(--jade-dark);}
+
+@media (prefers-reduced-motion: reduce){ *{transition:none !important;} }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="header">
+    <div class="eyebrow">Boarding Pass · Penang → Hat Yai → Ipoh</div>
+    <h1>Dicky & Wife<br>5-Day Trip</h1>
+    <div class="sub">Tap a stop to open directions. Grab legs open the Grab app. Times auto-shift if you're running late.</div>
+
+    <div class="budget-strip" id="budgetStrip"></div>
+  </div>
+
+  <div class="tabs" id="tabs"></div>
+
+  <div id="dayContent"></div>
+
+  <div class="footnote">
+    Clock assumed set to <b>Malaysia time</b> for schedule math (Day 2 Thailand stops show Thai time alongside). Grab deep-links are best-effort — if the app doesn't open, it'll fall back to the Grab website after a moment. Data syncs across devices if Firebase is configured; otherwise it's saved on this device only.
+  </div>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getFirestore, doc, onSnapshot, setDoc, enableIndexedDbPersistence } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+// Fill these in with your own free Firebase project's config (see setup notes)
+// to sync data across devices. Until you do, the app still works great —
+// it just saves to this device only (localStorage), same as before.
+const FIREBASE_CONFIG = {
+  apiKey: "YOUR_API_KEY",
+  authDomain: "YOUR_PROJECT.firebaseapp.com",
+  projectId: "YOUR_PROJECT",
+  storageBucket: "YOUR_PROJECT.appspot.com",
+  messagingSenderId: "YOUR_SENDER_ID",
+  appId: "YOUR_APP_ID"
+};
+
+// ---------- DATA ----------
+const DAYS = [
+{ id:'d1', label:'Day 1', date:'Fri 17 Jul 2026', iso:'2026-07-17', title:'Arrival & George Town Core', strategy:'Land, check into Le Embassy Hotel (your 4-night base), then ease into George Town on foot.',
+  items:[
+{id:'a1', time:'11:50', title:'Land at PEN Airport → Grab to Hotel', place:'Penang International Airport', mode:'car', costs:[{amount:30.00,cur:'RM',type:'grab'}]},
+    {id:'a2', time:'12:35', title:'Drop bags at Le Embassy Hotel', place:'Le Embassy Hotel George Town', mode:'walk', costs:[]},
+    {id:'a3_pray', time:'13:00', title:'Friday Prayer (Solat Jumaat)', place:'Pakistan Mosque Penang (or Kapitan Keling Mosque)', mode:'walk', costs:[], note:'Pakistan Mosque is only a 5-minute walk from the hotel.'},
+    {id:'a3', time:'14:15', title:'Late Lunch: Siam Road Charcoal Char Kuey Teow', place:'Siam Road Charcoal Char Kuey Teow', mode:'walk', costs:[{amount:22.00,cur:'RM',type:'cash'}]},
+    {id:'a4', time:'15:45', title:'Armenian Street Art Alleys & Chew Jetty', place:'Armenian Street Penang', mode:'walk', costs:[], note:'Free — also nearby: Chew Jetty'},
+    {id:'a5', time:'17:30', title:'Coffee: Norm Micro Roastery', place:'Norm Micro Roastery Penang', mode:'walk', costs:[{amount:45.00,cur:'RM',type:'cash'}]},
+    {id:'a6', time:'19:00', title:'Dinner: Chulia Street Hawker Food', place:'Chulia Street Hawker Food Penang', mode:'walk', costs:[{amount:40.00,cur:'RM',type:'cash'}]},
+  ]},
+{ id:'d2', label:'Day 2', date:'Sat 18 Jul 2026', iso:'2026-07-18', title:'Early Hat Yai Border Run', strategy:'Hit the border at 07:16 to skip tourist bus crowds. Thai-side times shown alongside Malaysia time.',
+  items:[
+    {id:'b1', time:'04:45', title:'Grab across Penang Bridge to Butterworth', place:'Butterworth Railway Station', mode:'grab', costs:[{amount:59.00,cur:'RM',type:'card'}]},
+    {id:'b2', time:'05:25', title:'KTM Komuter 2940 → Padang Besar', place:'Padang Besar Railway Station', mode:'train', costs:[{amount:22.80,cur:'RM',type:'cash'}], note:'Arrives 07:16'},
+    {id:'b3', time:'07:20', title:'Clear immigration, cross border', place:'Padang Besar', mode:'walk', costs:[], note:'Out on Thai side ~07:50'},
+    {id:'b4', time:'08:00', title:'Grab/van into Hat Yai center', place:'Hat Yai Center', mode:'grab', costs:[{amount:505.00,cur:'THB',type:'cash'}], note:'Arrive ~09:15 MY / 08:15 TH'},
+    {id:'b5', time:'11:30', title:'Lunch: Kan Eng Restaurant (Gaeng Som & Khao Yam)', place:'Kan Eng Restaurant Hat Yai', mode:'walk', costs:[{amount:450,cur:'THB',type:'cash'}], note:'10:30 Thai time'},
+    {id:'b6', time:'13:00', title:'Dessert: Mango Sticky Rice', place:'Khao Neow Mak Muang Hat Yai', mode:'walk', costs:[{amount:100,cur:'THB',type:'cash'}], note:'12:00 Thai time'},
+    {id:'b7', time:'14:00', title:'Mun Duey Tua Dessert Stall', place:'Mun Duey Tua Hat Yai', mode:'walk', costs:[{amount:50,cur:'THB',type:'cash'}], note:'13:00 Thai time'},
+    {id:'b8', time:'15:00', title:'Shopping: Kim Yong Market', place:'Kim Yong Market Hat Yai', mode:'walk', costs:[{amount:400,cur:'THB',type:'cash'}], note:'14:00 Thai time'},
+    {id:'b9', time:'17:30', title:'Khlong Hae Floating Market', place:'Khlong Hae Floating Market', mode:'transit', costs:[{amount:200,cur:'THB',type:'cash'}], note:'16:30 Thai time'},
+    {id:'b10', time:'19:00', title:'Streetside dinner: Spicy Som Tum Pla Ra', place:'Hat Yai street food', mode:'walk', costs:[{amount:100,cur:'THB',type:'cash'}], note:'18:00 Thai time'},
+    {id:'b11', time:'19:45', title:'Grab back to border checkpoint', place:'Padang Besar Border Checkpoint', mode:'grab', costs:[{amount:490,cur:'THB',type:'cash'}], note:'18:45 Thai time'},
+    {id:'b12', time:'20:15', title:'Return train → Butterworth', place:'Butterworth Railway Station', mode:'train', costs:[{amount:22.80,cur:'RM',type:'cash'}], note:'Arrives 22:06'},
+    {id:'b13', time:'22:15', title:'Grab back to hotel', place:'Le Embassy Hotel George Town', mode:'grab', costs:[{amount:32.00,cur:'RM',type:'card'}]},
+  ]},
+{ id:'d3', label:'Day 3', date:'Sun 19 Jul 2026', iso:'2026-07-19', title:'Toast Breakfast & Seaside Marina', strategy:'Charcoal toast breakfast, marina stroll, then chase golden hour at Batu Ferringhi.',
+  items:[
+    {id:'c1', time:'07:30', title:'Breakfast: Roti Bakar Hutton Lane', place:'Roti Bakar Hutton Lane', mode:'walk', costs:[{amount:20.00,cur:'RM',type:'cash'}]},
+    {id:'c2', time:'09:00', title:'Bus 101 → Tesco Seri Tanjung Pinang', place:'Tesco Seri Tanjung Pinang', mode:'bus', costs:[{amount:6.80,cur:'RM',type:'cash'}]},
+    {id:'c3', time:'10:15', title:'Morning walk: Straits Quay Marina', place:'Straits Quay Marina Penang', mode:'walk', costs:[]},
+    {id:'c4', time:'12:00', title:'Lunch: Green House Prawn Mee', place:'Green House Prawn Mee Jalan Burma', mode:'walk', costs:[{amount:23.00,cur:'RM',type:'cash'}]},
+    {id:'c5', time:'14:00', title:'Explore / rest at hotel (beat the heat)', place:'Le Embassy Hotel George Town', mode:'walk', costs:[]},
+    {id:'c6', time:'16:30', title:'Bus 101 → Batu Ferringhi Beach', place:'Jalan Batu Ferringhi Beach', mode:'bus', costs:[{amount:4.00,cur:'RM',type:'cash'}]},
+    {id:'c7', time:'17:15', title:'Sunset bean bags: Ferringhi Heart Beach Club', place:'Ferringhi Heart Penang', mode:'walk', costs:[{amount:45.00,cur:'RM',type:'cash'}]},
+    {id:'c8', time:'19:30', title:'Bus 101 → Chulia Street', place:'Chulia Street Penang', mode:'bus', costs:[{amount:4.00,cur:'RM',type:'cash'}]},
+    {id:'c9', time:'20:30', title:'Late night street food feast', place:'Chulia Street Hawker Food Penang', mode:'walk', costs:[{amount:40.00,cur:'RM',type:'cash'}]},
+  ]},
+{ id:'d4', label:'Day 4', date:'Mon 20 Jul 2026', iso:'2026-07-20', title:'Early Ipoh Day Trip & Food Trip', strategy:'First train down to Perak, Old Town breakfast, a Grab loop of sights, back by night train.',
+  items:[
+    {id:'d1a', time:'04:45', title:'Grab to mainland train hub', place:'Butterworth Railway Station', mode:'grab', costs:[{amount:59.00,cur:'RM',type:'card'}]},
+    {id:'d2a', time:'05:30', title:'KTM Komuter 2251 → Ipoh', place:'Ipoh Railway Station', mode:'train', costs:[{amount:25.60,cur:'RM',type:'cash'}], note:'Arrives 07:26'},
+    {id:'d3a', time:'07:45', title:'Breakfast: Kedai Kopi Nam Heong', place:'Kedai Kopi Nam Heong Ipoh', mode:'walk', costs:[{amount:25.00,cur:'RM',type:'cash'}]},
+    {id:'d4a', time:'09:15', title:'Concubine Lane street bites', place:'Concubine Lane Ipoh', mode:'walk', costs:[{amount:25.00,cur:'RM',type:'cash'}]},
+    {id:'d5a', time:'10:30', title:'Grab → Kellie\'s Castle', place:'Kellie\'s Castle Perak', mode:'grab', costs:[{amount:24.00,cur:'RM',type:'card',label:'Grab'},{amount:40.00,cur:'RM',type:'cash',label:'Entry'}]},
+    {id:'d6a', time:'11:15', title:'Grab → Tasik Cermin (Mirror Lake)', place:'Tasik Cermin Ipoh', mode:'grab', costs:[{amount:16.00,cur:'RM',type:'card',label:'Grab'},{amount:16.00,cur:'RM',type:'cash',label:'Entry'}], estimated:true},
+    {id:'d7a', time:'12:00', title:'Grab → Mural Art Lane', place:'Mural Art Lane Ipoh', mode:'grab', costs:[{amount:10.00,cur:'RM',type:'card',label:'Grab'}], estimated:true},
+    {id:'d8a', time:'15:00', title:'Photos + Heong Peng pastries', place:'Mural Art Lane Ipoh', mode:'walk', costs:[{amount:15.00,cur:'RM',type:'cash',label:'Pastries'}]},
+    {id:'d9a', time:'17:00', title:'Dinner: Restoran Lou Wong Bean Sprouts Chicken', place:'Restoran Lou Wong Ipoh', mode:'walk', costs:[{amount:45.00,cur:'RM',type:'cash'}]},
+    {id:'d10a', time:'19:25', title:'Return train → Butterworth', place:'Butterworth Railway Station', mode:'train', costs:[{amount:25.60,cur:'RM',type:'cash'}], note:'Arrives 21:21'},
+    {id:'d11a', time:'21:30', title:'Grab to hotel', place:'Le Embassy Hotel George Town', mode:'grab', costs:[{amount:32.00,cur:'RM',type:'card'}]},
+  ]},
+{ id:'d5', label:'Day 5', date:'Tue 21 Jul 2026', iso:'2026-07-21', title:'Souvenirs, Makan Pagi & Flight Out', strategy:'Early market walk, souvenirs, check out, one last viral breakfast-lunch, then airport.',
+  items:[
+    {id:'e1', time:'07:00', title:'Heritage walk: Chowrasta Market', place:'Chowrasta Market Penang', mode:'walk', costs:[{amount:15.00,cur:'RM',type:'cash'}]},
+    {id:'e2', time:'08:30', title:'Souvenirs: Ghee Hiang Tau Sar Piah', place:'Ghee Hiang Macalister Road Penang', mode:'walk', costs:[{amount:40.00,cur:'RM',type:'cash'}]},
+    {id:'e3', time:'10:00', title:'Check out of hotel, collect bags', place:'Le Embassy Hotel George Town', mode:'walk', costs:[]},
+    {id:'e4', time:'11:15', title:'Grab toward airport zone', place:'Penang International Airport', mode:'grab', costs:[{amount:35.00,cur:'RM',type:'card'}]},
+    {id:'e5', time:'12:00', title:'Lunch: Makan Pagi by Fizzy Cafe (Kopi Butter & Roti Jala)', place:'Makan Pagi by Fizzy Cafe Bayan Lepas', mode:'walk', costs:[{amount:45.00,cur:'RM',type:'cash'}]},
+    {id:'e6', time:'14:15', title:'Final Grab to terminal', place:'Penang International Airport', mode:'grab', costs:[{amount:10.00,cur:'RM',type:'card'}]},
+    {id:'e7', time:'14:20', title:'Arrive at Penang International Airport', place:'Penang International Airport', mode:'walk', costs:[]},
+    {id:'e8', time:'16:50', title:'Flight departs', place:'Penang International Airport', mode:'flight', costs:[]},
+  ]},
+];
+
+const MODE_ICON = {walk:'🚶', bus:'🚌', train:'🚆', grab:'🚗', transit:'🚐', flight:'✈️', none:''};
+const MODE_TRAVELMODE = {walk:'walking', bus:'transit', train:'transit', transit:'transit'};
+
+// ---------- STATE ----------
+let state = { costs:{}, done:{}, offsets:{}, rates:{RM:4455, THB:545}, cashOnHand:{RM:650, THB:3000} };
+let activeDay = DAYS[0].id;
+
+const SCHEMA_VERSION = 2; // bump whenever old saved state could be stale/incompatible
+const LS_KEY = 'trip-state';
+
+let syncMode = 'local'; // 'firebase' once successfully configured & connected
+let fsDocRef = null;
+
+function migrateState(){
+  if(!state.rates) state.rates = {RM:4455, THB:545};
+  if(!state.cashOnHand) state.cashOnHand = {RM:650, THB:3000};
+  if((state.schemaVersion||0) < SCHEMA_VERSION){
+    state.offsets = {};
+    if(state.rates.RM === 4400) state.rates.RM = 4455;
+    if(state.rates.THB === 540) state.rates.THB = 545;
+    state.schemaVersion = SCHEMA_VERSION;
+    saveState();
+  }
+}
+
+function applyIncomingState(raw){
+  if(raw){ try{ state = JSON.parse(raw); }catch(e){ /* keep current state on parse failure */ } }
+  migrateState();
+  render();
+}
+
+let saveTimer=null;
+function saveState(){
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(async ()=>{
+    const blob = JSON.stringify(state);
+    if(syncMode==='firebase' && fsDocRef){
+      try{ await setDoc(fsDocRef, {blob, updatedAt: Date.now()}); }
+      catch(e){ try{ localStorage.setItem(LS_KEY, blob); }catch(e2){} }
+    } else {
+      try{ localStorage.setItem(LS_KEY, blob); }catch(e){ /* best effort */ }
+    }
+  }, 250);
+}
+
+async function initStorage(){
+  const configured = FIREBASE_CONFIG.apiKey && FIREBASE_CONFIG.apiKey !== 'YOUR_API_KEY';
+  if(configured){
+    try{
+      const fbApp = initializeApp(FIREBASE_CONFIG);
+      const db = getFirestore(fbApp);
+      try{ await enableIndexedDbPersistence(db); }catch(e){ /* fine — e.g. multiple tabs open */ }
+      fsDocRef = doc(db, 'trips', 'holidaytrip');
+      syncMode = 'firebase';
+      onSnapshot(fsDocRef, (snap)=>{
+        const data = snap.data();
+        applyIncomingState(data && data.blob);
+      }, (err)=>{
+        console.warn('Sync error, falling back to local-only:', err);
+        applyIncomingState(localStorage.getItem(LS_KEY));
+      });
+      return; // onSnapshot fires immediately with cached/local data, then render() runs
+    }catch(e){
+      console.warn('Firebase init failed, using local-only storage:', e);
+    }
+  }
+  // Not configured, or failed to init — local-only mode
+  syncMode = 'local';
+  applyIncomingState(localStorage.getItem(LS_KEY));
+}
+
+// Combine a day's ISO date with an item's HH:MM into a real local timestamp (ms).
+function dayItemTimestamp(day, timeStr){
+  const [h,m] = timeStr.split(':').map(Number);
+  const d = new Date(day.iso+'T00:00:00');
+  d.setHours(h, m, 0, 0);
+  return d.getTime();
+}
+function tsToTime(ts){
+  const d = new Date(ts);
+  return String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');
+}
+function isTodayIso(iso){
+  const d = new Date();
+  const todayIso = d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+  return iso === todayIso;
+}
+function isDoneAllowed(day){
+  if(day.id === 'd1') return true; // Day 1 stays unlocked so you can test the app anytime
+  return isTodayIso(day.iso);
+}
+
+function costKey(dayId, itemId, idx){ return dayId+'::'+itemId+'::'+idx; }
+function doneKey(dayId, itemId){ return dayId+'::'+itemId; }
+
+function getCostValue(dayId, item, idx){
+  const k = costKey(dayId, item.id, idx);
+  if(state.costs[k] !== undefined) return state.costs[k];
+  return item.costs[idx].amount;
+}
+function setCostValue(dayId, item, idx, val){
+  const k = costKey(dayId, item.id, idx);
+  state.costs[k] = val;
+  saveState();
+}
+function isDone(dayId, item){ return !!state.done[doneKey(dayId, item.id)]; }
+function toggleDone(dayId, item){
+  const day = DAYS.find(d=>d.id===dayId);
+  if(!isDoneAllowed(day)) return; // only allow marking done on the actual day (Day 1 exempt for testing)
+  const k = doneKey(dayId, item.id);
+  const wasDone = !!state.done[k];
+  state.done[k] = !wasDone;
+  if(!wasDone){
+    // just marked Done -> rebase the next activity's clock to right now
+    rebaseToNow(dayId);
+  }
+  saveState();
+  render();
+}
+function getOffset(dayId){ return state.offsets[dayId] || 0; } // in minutes
+function setOffset(dayId, val){ state.offsets[dayId]=val; saveState(); }
+// Find the next not-done activity for this day and set the offset so its
+// adjusted time equals right now (cascades through the rest of the day too).
+function rebaseToNow(dayId){
+  const day = DAYS.find(d=>d.id===dayId);
+  const nowTs = Date.now();
+  const nextItem = day.items.find(it => !isDone(dayId, it));
+  if(!nextItem){ setOffset(dayId, 0); return; }
+  const schedTs = dayItemTimestamp(day, nextItem.time);
+  setOffset(dayId, Math.round((nowTs - schedTs)/60000));
+}
+function resetOffset(dayId){
+  setOffset(dayId, 0);
+  render();
+}
+
+function openMaps(place, mode){
+  const tm = MODE_TRAVELMODE[mode] || 'walking';
+  const url = 'https://www.google.com/maps/dir/?api=1&destination='+encodeURIComponent(place)+'&travelmode='+tm;
+  window.open(url, '_blank');
+}
+function openGrab(place){
+  const scheme = 'grab://open?screenType=BOOKING&dropOffKeyword='+encodeURIComponent(place);
+  const fallback = 'https://www.grab.com/my/transport/car/';
+  const start = Date.now();
+  window.location.href = scheme;
+  setTimeout(()=>{
+    if(!document.hidden && Date.now()-start < 2200){
+      window.open(fallback, '_blank');
+    }
+  }, 1200);
+}
+
+// ---------- RENDER ----------
+function computeDaySchedule(day){
+  const effectiveOffset = getOffset(day.id); // minutes
+  return day.items.map((item,i)=>{
+    const schedTs = dayItemTimestamp(day, item.time);
+    const adjustedTs = schedTs + effectiveOffset*60000;
+    const next = day.items[i+1];
+    const duration = next ? Math.round((dayItemTimestamp(day, next.time) - schedTs)/60000) : null;
+    return {item, schedTs, adjustedTs, adj: effectiveOffset!==0 && !isDone(day.id,item), duration};
+  });
+}
+
+function renderBudgetStrip(){
+  let planned = {}; // key cur+type -> sum (whole trip, regardless of done)
+  let actual = {};  // key cur+type -> sum (only activities marked Done so far)
+  DAYS.forEach(day=>{
+    day.items.forEach(item=>{
+      const done = isDone(day.id, item);
+      item.costs.forEach((c,idx)=>{
+        const key = c.cur+'-'+c.type;
+        planned[key] = (planned[key]||0) + c.amount;
+        if(done){
+          actual[key] = (actual[key]||0) + Number(getCostValue(day.id, item, idx));
+        } else {
+          actual[key] = actual[key] || 0;
+        }
+      });
+    });
+  });
+  const strip = document.getElementById('budgetStrip');
+  strip.innerHTML = '';
+
+  // IDR total chip, first and bolder
+  let totalIDR = 0;
+  Object.keys(actual).forEach(key=>{
+    const [cur] = key.split('-');
+    const rate = state.rates[cur] || 0;
+    totalIDR += actual[key] * rate;
+  });
+  const idrChip = document.createElement('div');
+  idrChip.className='chip';
+  idrChip.style.background = 'var(--jade)';
+  idrChip.style.borderColor = 'var(--jade)';
+  idrChip.innerHTML = '<div class="k" style="color:rgba(255,255,255,0.75);">Spent so far (IDR)</div><div class="v" style="color:#fff;">Rp '+fmt(Math.round(totalIDR))+'</div>';
+  strip.appendChild(idrChip);
+
+  Object.keys(planned).sort().forEach(key=>{
+    const [cur,type] = key.split('-');
+    const p = planned[key], a = actual[key];
+    const diff = a - p;
+    const cls = diff>0 ? 'over' : (diff<0 ? 'under' : '');
+    const chip = document.createElement('div');
+    chip.className='chip';
+    chip.innerHTML = '<div class="k">'+cur+' '+type+'</div><div class="v '+cls+'">'+fmt(a)+' <span style="font-weight:400;color:var(--muted);font-size:11px;">/ '+fmt(p)+'</span></div>';
+    strip.appendChild(chip);
+  });
+
+  // Cash-on-hand remaining (only makes sense for cash, not card/grab)
+  ['THB','RM'].forEach(cur=>{
+    const key = cur+'-cash';
+    if(!(key in planned)) return;
+    const spent = actual[key] || 0;
+    const onHand = state.cashOnHand[cur] || 0;
+    const remaining = onHand - spent;
+    const chip = document.createElement('div');
+    chip.className='chip';
+    const cls = remaining<0 ? 'over' : '';
+    chip.innerHTML = '<div class="k">'+cur+' cash left</div><div class="v '+cls+'">'+fmt(remaining)+'</div>';
+    strip.appendChild(chip);
+  });
+
+  // fixed reference line (no longer editable — rates & cash-on-hand are set in code)
+  let refRow = document.getElementById('refRow');
+  if(!refRow){
+    refRow = document.createElement('div');
+    refRow.id = 'refRow';
+    refRow.style.cssText = 'margin-top:6px;font-family:ui-monospace,monospace;font-size:10.5px;color:var(--muted);';
+    strip.parentNode.insertBefore(refRow, strip.nextSibling);
+  }
+  refRow.textContent = 'Rate: 1 RM = Rp '+fmt(state.rates.RM)+' · 1 THB = Rp '+fmt(state.rates.THB)
+    +'  |  Cash on hand: RM '+fmt(state.cashOnHand.RM)+' · THB '+fmt(state.cashOnHand.THB);
+}
+function fmt(n){ return Number(n).toLocaleString(undefined,{maximumFractionDigits:2}); }
+
+function renderTabs(){
+  const tabs = document.getElementById('tabs');
+  tabs.innerHTML='';
+  DAYS.forEach(day=>{
+    const b = document.createElement('button');
+    b.className = 'tab'+(day.id===activeDay?' active':'');
+    const shortDate = day.date ? day.date.split(' ').slice(0,2).join(' ') : '';
+    b.innerHTML = day.label + (shortDate ? '<br><span style="font-weight:400;opacity:.75;font-size:10px;">'+shortDate+'</span>' : '');
+    b.onclick = ()=>{ activeDay = day.id; render(); };
+    tabs.appendChild(b);
+  });
+}
+
+function renderDay(){
+  const day = DAYS.find(d=>d.id===activeDay);
+  const schedule = computeDaySchedule(day);
+  const now = Date.now();
+  const offset = getOffset(day.id);
+
+  const container = document.getElementById('dayContent');
+  container.innerHTML='';
+
+  const meta = document.createElement('div');
+  meta.className='day-meta';
+  meta.innerHTML = '<div class="day-title">'+day.title+'</div>'
+    + (day.date ? '<div style="font-family:ui-monospace,\'SF Mono\',Consolas,\'Roboto Mono\',monospace;font-size:11.5px;color:var(--jade-dark);font-weight:600;letter-spacing:.04em;margin-top:2px;">'+day.date+'</div>' : '')
+    + '<div class="day-strategy">'+day.strategy+'</div>'
+    + '<div style="font-size:11px;color:var(--muted);margin-top:6px;">🟢 still on time &nbsp; 🔴 time has passed — mark done to move on</div>'
+    + '<div class="offset-row"><span>'+(offset!==0 ? '<span class="offset-badge">'+(offset>0?'Running '+offset+' min behind':'Running '+(-offset)+' min ahead')+' — times below are adjusted</span>' : 'Times shown as planned')+'</span>'
+    + (isDoneAllowed(day) ? '<button class="reset-btn" id="resetOffsetBtn">Sync to now</button>' : '')
+    + '</div>';
+  container.appendChild(meta);
+  if(isDoneAllowed(day)){
+    document.getElementById('resetOffsetBtn').onclick = ()=>{ rebaseToNow(day.id); render(); };
+  }
+
+  // find index of first not-done for "next" tagging
+  let firstPendingIdx = schedule.findIndex(s=>!isDone(day.id, s.item));
+
+  schedule.forEach((s, idx)=>{
+    const item = s.item;
+    const done = isDone(day.id, item);
+    const card = document.createElement('div');
+    let statusTag = '';
+    let cardClass = 'card';
+    let timeClass = '';
+    if(done){
+      cardClass+=' done';
+    } else {
+      const overdue = now > s.adjustedTs;
+      timeClass = overdue ? 'overdue' : 'ontime';
+      cardClass += ' '+timeClass;
+      if(idx===firstPendingIdx){
+        cardClass+=' now';
+        statusTag = '<span class="status-tag '+(overdue?'late':'next')+'">'+(overdue?'OVERDUE':'NOW / NEXT')+'</span>';
+      }
+    }
+    card.className = cardClass;
+
+    const icon = MODE_ICON[item.mode] || '';
+    const adjTag = s.adj ? '<div class="adj">→ '+tsToTime(s.adjustedTs)+'</div>' : '';
+    const adjEndTag = (s.adj && s.duration!==null) ? '<div class="adj-end">until '+tsToTime(s.adjustedTs + s.duration*60000)+'</div>' : '';
+
+    let costsHtml = '';
+    if(item.costs.length){
+      costsHtml = '<div class="costs">' + item.costs.map((c,ci)=>{
+        const val = getCostValue(day.id, item, ci);
+        return '<div class="cost-row">'
+          + '<span class="cost-label">'+(c.label || (c.type==='card'?'Grab':'Cash'))+'</span>'
+          + '<div class="cost-input-wrap">'
+          + '<input type="number" inputmode="decimal" value="'+val+'" data-day="'+day.id+'" data-item="'+item.id+'" data-idx="'+ci+'">'
+          + '<span class="cost-type">'+c.cur+'</span>'
+          + '</div>'
+          + '</div>';
+      }).join('') + '</div>';
+    }
+
+    const onCorrectDate = isDoneAllowed(day);
+    let actionsHtml = '<div class="actions">';
+    if(item.mode==='grab'){
+      actionsHtml += '<button class="btn grab" data-grab="'+encodeURIComponent(item.place)+'">🚗 Open Grab</button>';
+      actionsHtml += '<button class="btn maps" data-maps="'+encodeURIComponent(item.place)+'" data-mode="walk">📍 View on map</button>';
+    } else if(item.mode==='walk' || item.mode==='bus' || item.mode==='train' || item.mode==='transit'){
+      actionsHtml += '<button class="btn maps" data-maps="'+encodeURIComponent(item.place)+'" data-mode="'+item.mode+'">📍 Directions</button>';
+    }
+    if(onCorrectDate){
+      actionsHtml += '<button class="btn done-btn'+(done?' on':'')+'" data-done="'+item.id+'">'+(done?'✓ Done':'Mark done')+'</button>';
+    } else {
+      actionsHtml += '<button class="btn done-btn" disabled style="opacity:.4;cursor:not-allowed;margin-left:auto;" title="Only available on '+day.date+'">Mark done</button>';
+    }
+    actionsHtml += '</div>';
+
+    card.innerHTML =
+      '<div class="stub-time '+timeClass+'"><div class="t">'+item.time+'</div>'+adjTag+adjEndTag+'<div class="mode">'+icon+'</div></div>'
+      + '<div class="stub-body">'
+      + statusTag
+      + '<div class="stub-title">'+item.title+'</div>'
+      + '<div class="stub-place">'+item.place+(item.estimated?' · time estimated':'')+'</div>'
+      + (s.duration!==null ? '<div class="stub-note" style="font-style:normal;">⏱ ~'+s.duration+' min here</div>' : '')
+      + (item.note ? '<div class="stub-note">'+item.note+'</div>' : '')
+      + costsHtml
+      + actionsHtml
+      + '</div>';
+    container.appendChild(card);
+  });
+
+  // wire events
+  container.querySelectorAll('[data-maps]').forEach(btn=>{
+    btn.onclick = ()=> openMaps(decodeURIComponent(btn.dataset.maps), btn.dataset.mode);
+  });
+  container.querySelectorAll('[data-grab]').forEach(btn=>{
+    btn.onclick = ()=> openGrab(decodeURIComponent(btn.dataset.grab));
+  });
+  container.querySelectorAll('[data-done]').forEach(btn=>{
+    btn.onclick = ()=> toggleDone(day.id, day.items.find(i=>i.id===btn.dataset.done));
+  });
+  container.querySelectorAll('input[type="number"]').forEach(inp=>{
+    inp.oninput = ()=>{
+      const d=inp.dataset.day, it=day.items.find(i=>i.id===inp.dataset.item), idx=Number(inp.dataset.idx);
+      setCostValue(d, it, idx, inp.value === '' ? 0 : Number(inp.value));
+      renderBudgetStrip();
+    };
+  });
+}
+
+function render(){
+  renderTabs();
+  renderDay();
+  renderBudgetStrip();
+}
+
+initStorage();
+setInterval(render, 30000); // recheck schedule/lateness every 30s
+
+if('serviceWorker' in navigator){
+  window.addEventListener('load', ()=>{
+    navigator.serviceWorker.register('sw.js').catch(()=>{ /* offline install not available on this host */ });
+  });
+}
+</script>
+</body>
+</html>
