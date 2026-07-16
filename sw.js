@@ -1,4 +1,4 @@
-const CACHE = 'trip-itinerary-v10';
+const CACHE = 'trip-itinerary-v15';
 const FILES = [
   './index.html',
   './manifest.json',
@@ -20,11 +20,7 @@ self.addEventListener('activate', (e) => {
   );
 });
 
-// Cache-first for the app shell; for everything else (including the Firebase
-// library loaded from gstatic.com) — serve from cache if we have it, but also
-// fetch in the background and save the result for next time. This way the
-// Firebase SDK itself becomes available offline after the first successful
-// online load, not just our own 5 files.
+
 self.addEventListener('fetch', (e) => {
   if (e.request.method !== 'GET') return;
   e.respondWith(
