@@ -442,6 +442,21 @@ function openGrab(place){
   }, 1200);
 }
 
+function openMaxim(place) {
+  // Intent link engineered specifically for Android to trigger the Maxim app
+  const scheme = 'intent://#Intent;scheme=taximaxim;package=com.taximaxim.client;S.search_text=' + encodeURIComponent(place) + ';end';
+  const fallback = 'https://taximaxim.com/';
+  const start = Date.now();
+  
+  window.location.href = scheme;
+  
+  setTimeout(() => {
+    if (!document.hidden && Date.now() - start < 2200) {
+      window.open(fallback, '_blank');
+    }
+  }, 1200);
+}
+
 // ---------- RENDER ----------
 function computeDaySchedule(day){
   const effectiveOffset = getOffset(day.id); // minutes
@@ -638,6 +653,9 @@ function renderDay(){
   });
   container.querySelectorAll('[data-grab]').forEach(btn=>{
     btn.onclick = ()=> openGrab(decodeURIComponent(btn.dataset.grab));
+  });
+    container.querySelectorAll('[data-maxim]').forEach(btn=>{
+    btn.onclick = ()=> openMaxim(decodeURIComponent(btn.dataset.maxim));
   });
   container.querySelectorAll('[data-done]').forEach(btn=>{
     btn.onclick = ()=> toggleDone(day.id, day.items.find(i=>i.id===btn.dataset.done));
